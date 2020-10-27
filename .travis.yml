@@ -10,7 +10,7 @@ install:
 script:
   - isort . --diff
   - pycodestyle tests/
-  - xvfb-run nosetests
+  - xvfb-run --server-args="-screen 0 1024x768x24" nosetests
 notifications:
   irc: false
   email: false
