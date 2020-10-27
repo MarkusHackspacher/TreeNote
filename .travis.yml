@@ -2,7 +2,7 @@ language: python
 sudo: required
 dist: trusty
 python:
-  - "3.5"
+  - "3.9"
 before_install:
   - "sudo apt-get update"
   - "export DISPLAY=:99.0"
