@@ -27,16 +27,18 @@ The author has used many time management programs over the last four years. When
 When starting TreeNote for the first time, you will see a detailed manual which guides you through the features.
 The user interface and the manual are supplied in German and English.
 
-## Project status & Warning (February 2018)
+You find a complete list of features in the [wiki](https://github.com/TreeNote/TreeNote/wiki).
+
+## Project status & Warning (December 2018)
 Me and couple of friends are using TreeNote on a daily basis since years. It is a central and valuable piece for our self-management. TreeNote is well tested and bug-free, apart from this one: 
 
 When you have searched or filtered the tree you must not edit the tree's structure. If you do, TreeNote may crash and your tree may become corrupted (you cannot open it anymore). Editing of a single entry (text, color, date) is okay.
 
 It is a good thing to enable daily backups in the settings.
 
-I am doing a startup, which works on the successor of TreeNote. Therefore I won't develop TreeNote any further.
+I would like to do a complete rewrite of TreeNote in Scala. It shall be more robust, faster and collaboratively editable (while of course running offline and privacy-friendly). Therefore I won't develop TreeNote any further.
 
-An alternative to TreeNote is the collaborative online outliner [Dynalist](https://dynalist.io/). It has a desktop app, too.
+Alternatives to TreeNote are the collaborative online outliners [Dynalist](https://dynalist.io/), Workflowy and Moo.do. They have desktop apps, too.
 
 ![Screenshot](/treenote/resources/images/screenshot.png)
 
@@ -44,9 +46,9 @@ An alternative to TreeNote is the collaborative online outliner [Dynalist](https
 # Download
 * **Linux**: TreeNote requieres an installation of the programming language Python 3 and the GUI framework PyQt5, before it can be run from source. It is installed as follows:
 	* <i class="fl-archlinux"></i> **Arch Linux**: Search in the AUR for 'treenote' with e.g. Pamac or enter `yaourt -S treenote-git` in a Terminal.
-	* <i class="fl-ubuntu"></i> **Debian and Ubuntu**: Enter `sudo apt-get install python3-pip`, then `sudo pip3 install pyqt5 treenote` in a Terminal. Run by entering `nohup dbus-run-session treenote &`.
-	* <i class="fl-fedora"></i> **Fedora**: Enter `sudo yum install python3-pip`, then `sudo pip3 install pyqt5 treenote` in a Terminal. Run by entering  `nohup treenote &`.
-	* <i class="fl-tux"></i> **Other Linux distros**: Enter `sudo pip3 install pyqt5 treenote` in a Terminal. Run by entering  `nohup treenote &`.
+	* <i class="fl-ubuntu"></i> **Debian and Ubuntu**: Enter `sudo apt-get install python3-pip`, then `sudo pip3 install sip pyqt5 treenote` in a Terminal.
+	* <i class="fl-fedora"></i> **Fedora**: Enter `sudo yum install python3-pip`, then `sudo pip3 install pyqt5 treenote` in a Terminal.
+	* <i class="fl-tux"></i> **Other Linux distros**: Enter `sudo pip3 install pyqt5 treenote` in a Terminal.
 * <i class="fa fa-windows"></i> **Windows**: [Download <i class="fa fa-arrow-circle-o-down" aria-hidden="true"></i>](https://github.com/TreeNote/TreeNote/releases/download/v1.7.8/treenote_v1.7.8_windows.zip) and extract the archive, then doubleclick the `treenote.exe` file inside. 
 * <i class="fa fa-apple"></i> **Mac OS X**: [Download <i class="fa fa-arrow-circle-o-down" aria-hidden="true"></i>](https://github.com/TreeNote/TreeNote/releases/download/v1.7.8/treenote_v1.7.8_mac.zip)
 
