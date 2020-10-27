@@ -9,7 +9,7 @@ addons:
   apt:
     packages:
     - libxkbcommon-x11-0
-    - xcfb
+    - xvfb
 install:
   - pip install PyQt5 pycodestyle isort
 script:
