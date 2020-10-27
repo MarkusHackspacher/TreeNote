@@ -5,6 +5,11 @@ services:
   - xvfb
 python:
   - "3.9"
+addons:
+  apt:
+    packages:
+    - libxkbcommon-x11-0
+    - xcfb
 install:
   - pip install PyQt5 pycodestyle isort
 script:
