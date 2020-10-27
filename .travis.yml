@@ -5,14 +5,12 @@ services:
   - xvfb
 python:
   - "3.9"
-variables:
-  QT_QPA_PLATFORM: "offscreen"
 install:
   - pip install PyQt5 pycodestyle isort
 script:
   - isort . --diff
   - pycodestyle tests/
-  - nosetests
+  - xvfb-run nosetests
 notifications:
   irc: false
   email: false
