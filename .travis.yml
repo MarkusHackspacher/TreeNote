@@ -10,6 +10,7 @@ addons:
     packages:
     - libxkbcommon-x11-0
     - xvfb
+    - libxcb-xinerama0
 install:
   - pip install PyQt5 pycodestyle isort
 script:
