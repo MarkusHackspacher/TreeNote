@@ -12,21 +12,24 @@ import sys
 import textwrap
 from functools import partial
 from traceback import format_exception
-#
-import sip  # needed for pyinstaller, get's removed with 'optimize imports'!
-from PyQt5.QtCore import QThread, pyqtSignal, pyqtSlot, QPoint, QModelIndex, QMimeData, QObject, QLocale, QTranslator, \
-    QLibraryInfo, Qt, QSettings, QParallelAnimationGroup, QPropertyAnimation, QTimer, QItemSelectionModel, \
-    QItemSelection, QDate, QSize, QTime, QFileInfo, QUrl, QAbstractAnimation, QRectF
+
+# import sip  # needed for pyinstaller, get's removed with 'optimize imports'!
+from PyQt5.QtCore import (QAbstractAnimation, QDate, QFileInfo, QItemSelection,
+                          QItemSelectionModel, QLibraryInfo, QLocale,
+                          QMimeData, QModelIndex, QObject,
+                          QParallelAnimationGroup, QPoint, QPropertyAnimation,
+                          QRectF, QSettings, QSize, Qt, QThread, QTime, QTimer,
+                          QTranslator, QUrl, pyqtSignal, pyqtSlot)
 from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
 from PyQt5.QtPrintSupport import *
-#
+from PyQt5.QtWidgets import *
+
 import treenote.model as model
 import treenote.tag_model as tag_model
 import treenote.planned_model as planned_model
 import treenote.util as util
-from treenote.version import __version__
 from treenote.resources import qrc_resources  # get's removed with 'optimize imports'!
+from treenote.version import __version__
 
 
 def resource_path(relative_path):
