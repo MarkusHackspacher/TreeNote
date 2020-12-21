@@ -1,5 +1,8 @@
+import time
 from unittest import TestCase
+
 from PyQt5.QtWidgets import QApplication
+
 from treenote.main import MainWindow
 from treenote.model import TreeModel
 
@@ -19,8 +22,10 @@ class TestTreeModel(TestCase):
 
     def tearDown(self):
         """Deletes the reference owned by self"""
+        time.sleep(0.2)
         del self.app
         super(TestTreeModel, self).tearDown()
+        time.sleep(0.2)
 
     def test_correct_init(self):
         self.assertEqual(self.tree.rootItem.header_list, ['a', 'b', 'c'])
