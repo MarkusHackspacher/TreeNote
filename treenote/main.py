@@ -641,18 +641,18 @@ class MainWindow(QMainWindow):
         else:
             self.toggle_sidebars()
 
-        QTimer().singleShot(200, self.reset_view)
+        QTimer(self).singleShot(200, 1, self.reset_view)
 
         # restore columns
         columns_hidden = settings.value(COLUMNS_HIDDEN, 'false')
         if columns_hidden == 'true':
             self.toggle_columns()
 
-        self.backup_timer = QTimer()
+        self.backup_timer = QTimer(self)
         self.backup_timer.timeout.connect(self.backup_tree_if_changed)
         self.start_backup_service(settings.value('backup_interval', 0))
 
-        self.refresh_reminder_label_timer = QTimer()
+        self.refresh_reminder_label_timer = QTimer(self)
         self.refresh_reminder_label_timer.timeout.connect(self.update_reminder_label)
         self.refresh_reminder_label_timer.start(6 * 60 * 60 * 1000)  # every 6 hours, time specified in ms
 
@@ -751,7 +751,7 @@ class MainWindow(QMainWindow):
         for index in self.item_model.indexes():
             if self.item_model.getItem(index) == self.item_model.selected_item:
                 self.select_from_to(index, index)
-                QTimer().singleShot(100, lambda: self.focused_column().view.scrollTo(
+                QTimer(self).singleShot(100 ,lambda: self.focused_column().view.scrollTo(
                     self.filter_proxy_index_from_model_index(index)))
                 break
         self.fill_bookmarkShortcutsMenu()
@@ -1138,7 +1138,7 @@ class MainWindow(QMainWindow):
         index = self.bookmarks_view.indexAt(point)
         if not index.isValid():
             return
-        menu = QMenu()
+        menu = QMenu(self)
         menu.addAction(self.editBookmarkAction)
         menu.addAction(self.deleteBookmarkAction)
         menu.addAction(self.moveBookmarkUpAction)
@@ -1643,9 +1643,9 @@ class MainWindow(QMainWindow):
             self.reminder_label.setText('<b><font color=red>' + self.tr('‼‼‼‼‼‼‼‼‼‼‼‼‼‼ Check your reminders ‼‼‼‼‼‼‼‼‼‼‼‼‼‼</font><b>'))
 
     def split_window(self):  # creates another item_view
-        new_column = QWidget()
+        new_column = QWidget(self)
 
-        new_column.toggle_sidebars_button = QPushButton()
+        new_column.toggle_sidebars_button = QPushButton(self)
         new_column.toggle_sidebars_button.setToolTip(self.tr('Hide / show the sidebars'))
         new_column.toggle_sidebars_button.setIcon(QIcon(':/toggle_sidebars'))
         new_column.toggle_sidebars_button.setStyleSheet('QPushButton {\
@@ -1666,7 +1666,7 @@ class MainWindow(QMainWindow):
         new_column.search_bar.textEdited[str].connect(filter_delay.trigger)
         filter_delay.triggered[str].connect(self.search)
 
-        new_column.bookmark_button = QPushButton()
+        new_column.bookmark_button = QPushButton(self)
         new_column.bookmark_button.setToolTip('Bookmark current filters')
         new_column.bookmark_button.setIcon(QIcon(':/star'))
         new_column.bookmark_button.setStyleSheet('QPushButton {\
@@ -1676,7 +1676,7 @@ class MainWindow(QMainWindow):
         new_column.bookmark_button.clicked.connect(
             lambda: BookmarkDialog(self, search_bar_text=self.focused_column().search_bar.text()).exec_())
 
-        self.tab_bar = QTabBar()
+        self.tab_bar = QTabBar(self)
         self.tab_bar.setUsesScrollButtons(False)
         self.tab_bar.setDrawBase(False)
         self.tab_bar.addTab(self.tr('Tree'))
@@ -1689,20 +1689,20 @@ class MainWindow(QMainWindow):
             if i == 1: # plan view
                 shortcut.activated.connect(partial(self.set_searchbar_text_and_search, ''))
 
-        self.path_bar = QWidget()
-        layout = QHBoxLayout()
+        self.path_bar = QWidget(self)
+        layout = QHBoxLayout(self.path_bar)
         layout.setAlignment(Qt.AlignLeft)
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(1)
         self.path_bar.setLayout(layout)
 
-        self.search_holder = QWidget()
-        layout = QHBoxLayout()
+        self.search_holder = QWidget(self)
+        layout = QHBoxLayout(self.search_holder)
         layout.addWidget(self.tab_bar)
         layout.addWidget(self.path_bar)
         layout.addSpacerItem(QSpacerItem(0, 0, QSizePolicy.Expanding))
 
-        self.reminder_label = QLabel('')
+        self.reminder_label = QLabel(self)
         self.reminder_label.filter_proxy = model.FilterProxyModel()
         self.reminder_label.filter_proxy.setSourceModel(self.item_model)
         self.reminder_label.filter_proxy.filter = 'date<1d'
@@ -1747,7 +1747,7 @@ class MainWindow(QMainWindow):
         self.planned_view = ResizeTreeView(self, plan_model)
         self.planned_view.setItemDelegate(model.Delegate(self, plan_model, self.planned_view.header()))
 
-        new_column.stacked_widget = QStackedWidget()
+        new_column.stacked_widget = QStackedWidget(self)
         new_column.stacked_widget.addWidget(new_column.view)
         new_column.stacked_widget.addWidget(self.planned_view)
 
@@ -1759,7 +1759,7 @@ class MainWindow(QMainWindow):
 
         self.tab_bar.currentChanged.connect(change_tab)
 
-        layout = QVBoxLayout()
+        layout = QVBoxLayout(new_column)
         layout.setContentsMargins(0, 0, 0, 0)  # left, top, right, bottom
         if self.item_views_splitter.count() < 1:
             layout.addWidget(self.search_holder)
@@ -1920,7 +1920,7 @@ class MainWindow(QMainWindow):
         self.change_active_tree()
 
     def print(self):
-        dialog = QPrintPreviewDialog()
+        dialog = QPrintPreviewDialog(self)
         view = PrintTreeView(self, dialog.findChildren(QPrintPreviewWidget)[0])
         if self.current_view() is self.planned_view:
             view.setModel(self.planned_view.model())
@@ -1950,7 +1950,7 @@ class PrintTreeView(QTreeView):
         printer.setResolution(300)
         old_fontsize = self.main_window.fontsize
         self.main_window.fontsize = int(30 * self.main_window.print_size)
-        painter = QPainter()
+        painter = QPainter(self)
         painter.begin(printer)
         painter.setFont(QFont(model.FONT, 9))
         painter.setRenderHints(QPainter.Antialiasing | QPainter.SmoothPixmapTransform)
@@ -2149,7 +2149,7 @@ class ImportDialog(FocusTreeAfterCloseDialog):
         super(ImportDialog, self).__init__(main_window)
         self.setWindowTitle(title)
         self.setMinimumWidth(1200)
-        self.import_file_edit = QLineEdit()
+        self.import_file_edit = QLineEdit(self)
         self.import_file_edit.setReadOnly(True)
         self.select_import_file_button = QPushButton(self.tr('Select import file...'))
         self.select_import_file_button.clicked.connect(
@@ -2214,7 +2214,7 @@ class AboutBox(FocusTreeAfterCloseDialog):
         label.setWordWrap(True)
         button_box = QDialogButtonBox(QDialogButtonBox.Ok)
         button_box.button(QDialogButtonBox.Ok).clicked.connect(self.reject)
-        grid = QGridLayout()
+        grid = QGridLayout(self)
         grid.setContentsMargins(20, 20, 20, 20)
         grid.setSpacing(20)
         grid.addWidget(headline, 0, 0)  # row, column
@@ -2323,7 +2323,7 @@ class ShortcutDialog(FocusTreeAfterCloseDialog):
         self.setMinimumWidth(340)
         self.index = index
         item = main_window.item_model.getItem(index)
-        self.shortcut_edit = QKeySequenceEdit()
+        self.shortcut_edit = QKeySequenceEdit(self)
         self.shortcut_edit.setKeySequence(QKeySequence(item.shortcut))
         clearButton = QPushButton('Clear')
         clearButton.clicked.connect(self.shortcut_edit.clear)
@@ -2331,7 +2331,7 @@ class ShortcutDialog(FocusTreeAfterCloseDialog):
         buttonBox.button(QDialogButtonBox.Apply).clicked.connect(self.accept)
         buttonBox.button(QDialogButtonBox.Cancel).clicked.connect(self.reject)
 
-        grid = QGridLayout()
+        grid = QGridLayout(self)
         grid.addWidget(QLabel('Shortcut:'), 0, 0)  # row, column
         grid.addWidget(self.shortcut_edit, 0, 1)
         grid.addWidget(clearButton, 0, 2)
@@ -2353,7 +2353,7 @@ class RenameTagDialog(FocusTreeAfterCloseDialog):
         self.line_edit = QLineEdit(tag)
         buttonBox = QDialogButtonBox(QDialogButtonBox.Apply | QDialogButtonBox.Cancel)
 
-        grid = QGridLayout()
+        grid = QGridLayout(self)
         grid.addWidget(QLabel('Enter new tag name:'), 0, 0)  # row, column
         grid.addWidget(self.line_edit, 0, 1)
         grid.addWidget(buttonBox, 1, 0, 1, 2, Qt.AlignRight)  # fromRow, fromColumn, rowSpan, columnSpan.
@@ -2371,7 +2371,7 @@ class RenameTagDialog(FocusTreeAfterCloseDialog):
 class SettingsDialog(FocusTreeAfterCloseDialog):
     def __init__(self, main_window):
         super(SettingsDialog, self).__init__(main_window)
-        theme_dropdown = QComboBox()
+        theme_dropdown = QComboBox(self)
         theme_dropdown.addItems(['Light', 'Dark'])
         current_palette_index = 0 if QApplication.palette() == self.main_window.light_palette else 1
         theme_dropdown.setCurrentIndex(current_palette_index)
@@ -2382,9 +2382,9 @@ class SettingsDialog(FocusTreeAfterCloseDialog):
         indentation_spinbox.valueChanged[int].connect(
             lambda: main_window.set_indentation_and_style_tree(indentation_spinbox.value()))
 
-        folder_chooser_layout = QHBoxLayout()
+        folder_chooser_layout = QHBoxLayout(self)
         folder_chooser_layout.setSpacing(5)
-        self.backup_folder_textedit = QTextEdit()
+        self.backup_folder_textedit = QTextEdit(self)
         self.backup_folder_textedit.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.backup_folder_textedit.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.backup_folder_textedit.setReadOnly(True)
@@ -2398,7 +2398,7 @@ class SettingsDialog(FocusTreeAfterCloseDialog):
 
         buttonBox = QDialogButtonBox(QDialogButtonBox.Close)
         buttonBox.button(QDialogButtonBox.Close).clicked.connect(self.close)
-        backup_interval_spinbox = QSpinBox()
+        backup_interval_spinbox = QSpinBox(self)
         backup_interval_spinbox.setValue(main_window.backup_interval)
         backup_interval_spinbox.setRange(0, 10000)
         backup_interval_spinbox.valueChanged[int].connect(
@@ -2534,10 +2534,10 @@ class Spoiler(QWidget):
         super(Spoiler, self).__init__(parent)
 
         self.animationDuration = 300
-        self.toggleAnimation = QParallelAnimationGroup()
-        self.contentArea = QScrollArea()
-        self.toggleButton = QToolButton()
-        mainLayout = QGridLayout()
+        self.toggleAnimation = QParallelAnimationGroup(self)
+        self.contentArea = QScrollArea(self)
+        self.toggleButton = QToolButton(self)
+        mainLayout = QGridLayout(self)
 
         self.toggleButton.setStyleSheet("QToolButton { border: none; }")
         self.toggleButton.setToolButtonStyle(Qt.ToolButtonTextBesideIcon)
@@ -2597,10 +2597,10 @@ def start():
     QFontDatabase.addApplicationFont(os.path.join(RESOURCE_FOLDER, 'SourceSansPro-Regular.otf'))
 
     locale = QLocale.system().name()
-    qt_translator = QTranslator()
+    qt_translator = QTranslator(app)
     if qt_translator.load("qtbase_" + locale, QLibraryInfo.location(QLibraryInfo.TranslationsPath)):
         app.installTranslator(qt_translator)
-    app_translator = QTranslator()
+    app_translator = QTranslator(app)
     if app_translator.load('treenote_' + locale, os.path.join(RESOURCE_FOLDER, 'locales')):
         app.installTranslator(app_translator)
 
