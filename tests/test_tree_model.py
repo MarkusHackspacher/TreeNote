@@ -1,4 +1,3 @@
-import time
 from unittest import TestCase
 
 from PyQt5.QtWidgets import QApplication
@@ -6,6 +5,7 @@ from PyQt5.QtWidgets import QApplication
 from treenote.main import MainWindow
 from treenote.model import TreeModel
 
+_instance = None
 
 class TestTreeModel(TestCase):
     """Test for class TreeModel"""
@@ -15,17 +15,18 @@ class TestTreeModel(TestCase):
 
         # Simple way of making instance a singleton
         super(TestTreeModel, self).setUp()
+        global _instance
+        if _instance is None:
+            _instance = QApplication([])
 
-        self.app = QApplication([])
+        self.app = _instance
         self.window = MainWindow(self.app)
         self.tree = TreeModel(self.window, ['a', 'b', 'c'])
 
     def tearDown(self):
         """Deletes the reference owned by self"""
-        time.sleep(0.2)
-        del self.app
+        self.window.close()
         super(TestTreeModel, self).tearDown()
-        time.sleep(0.2)
 
     def test_correct_init(self):
         self.assertEqual(self.tree.rootItem.header_list, ['a', 'b', 'c'])
