@@ -7,13 +7,16 @@ python:
   - "3.7"
   - "3.8"
   - "3.9"
+env:
+  # This variable is required for Qt to work on CI.
+  - QT_QPA_PLATFORM="offscreen"
 install:
   - pip install -r requirements.txt
   - pip install pycodestyle isort
 script:
   - isort . --diff
   - pycodestyle tests/
-  - QT_QPA_PLATFORM=offscreen xvfb-run -a --server-args="-screen 0 1024x768x24" nosetests
+  - xvfb-run -a --server-args="-screen 0 1024x768x24" nosetests
 notifications:
   irc: false
   email: false
